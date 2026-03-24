@@ -1,0 +1,93 @@
+name: Python tests
+
+on: [push, pull_request] # workflow_dispatch
+
+permissions:
+  contents: read
+
+concurrency:
+  # Cancel running jobs if new commits are pushed
+  group: >
+    ${{ github.workflow }}-
+    ${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+
+    runs-on: self-hosted
+
+    container:
+      image: ubuntu/ubuntu:jammy
+      options: --user root  # Ensures it can install packages if needed
+
+    steps:
+
+    - name: Pre-run cleanup
+        # Make sure the current directory is empty
+      run: find . -delete
+
+    - uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        echo "INSTALL DEPS"
+
+    - name: Clear all caches
+      run: |
+        echo "CLEAR CACHES"
+
+    - name: Running serial fast tests
+      run: |
+        echo "FAST TESTS!"
+
+    - name: Running serial slow tests
+      run: |
+        echo "SLOW TESTS!"
+
+    - name: Running parallel tests for forward problem only
+      run: |
+          echo "FWD PARALLEL TESTS!"
+    
+    - name: Running parallel tests for inversion
+      run: |
+          echo "INV PARALLEL TESTS!"
+
+    - name: Covering parallel 3D forward test
+      continue-on-error: true
+      run: |
+        echo "HEXAHEDRAL TESTS!"
+    - name: Covering parallel forward test
+      continue-on-error: true
+      run: |
+        echo "FORWARD TESTS!"
+    - name: Covering parallel fwi test
+      continue-on-error: true
+      run: |
+          echo "FWI TESTS!"
+    - name: Covering parallel supershot test
+      continue-on-error: true
+      run: |
+          echo "SUPERSHOT TESTS!"
+    - name: Covering parallel io test
+      continue-on-error: true
+      run: |
+          echo "PARALLEL IO TESTS!"
+    - name: Covering parallel supershot grad test
+      continue-on-error: true
+      run: |
+          echo "SUPERSHOT GRAD TESTS!"
+    - name: Covering spatially parallelized shots in serial
+      continue-on-error: true
+      run: |
+          echo "MULTIPLE SERIAL TESTS!"
+    - name: Covering spatially parallelized shots in serial
+      continue-on-error: true
+      run: |
+          echo "SERIALSHOTS TESTS!"
+    - name: Uploading coverage to Codecov
+      run: |
+        echo "CODECOV UPLOAD"
+    - name: Post-run cleanup
+      if: always()
+      run: find . -delete

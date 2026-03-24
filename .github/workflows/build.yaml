@@ -1,0 +1,64 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * 0'
+  # workflow_dispatch:
+# on: [push, pull_request]
+
+jobs:
+  test:
+    name: Install and test (Linux)
+    runs-on: self-hosted
+
+    container:
+      image: ubuntu:latest
+
+    steps:
+      - name: Fix HOME
+        # For unknown reasons GitHub actions overwrite HOME to /github/home
+        # which will break everything unless fixed
+        # (https://github.com/actions/runner/issues/863)
+        run: echo "HOME=/root" >> "$GITHUB_ENV"
+
+      - name: Pre-run cleanup
+        # Make sure the current directory is empty
+        run: find . -delete
+      
+      # Git is needed for actions/checkout and Python for firedrake-configure
+      - name: Install system dependencies (1)
+        run: |
+          echo "DEPS"
+
+      - uses: actions/checkout@v4
+
+      - name: Cloning and installing dependencies
+        run: |
+          echo "CLONE"
+      - name: Install LIB
+        run: |
+          echo "INSTALL LIB"
+
+      - name: Install ANOTHER LIB
+        id: install
+        run: |
+          echo "INSTALL ANOTHER LIB"
+
+      - name: Run check
+        run: |
+          echo "CHECK"
+        timeout-minutes: 5
+      
+      - name: Run smoke tests
+        run: |
+          echo "SMOKE TESTS"
+
+      - name: Post-run cleanup
+        if: always()
+        run: find . -delete

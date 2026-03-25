@@ -38,7 +38,7 @@ jobs:
     - name: Running serial fast tests
       run: |
         pytest -m "not slow" --cov=src
-        cat coverage.xml | grep 'package name="."'
+        # cat coverage.xml | grep 'package name="."'
 
     - name: Debug coverage file
       run: ls -la

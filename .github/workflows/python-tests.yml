@@ -40,6 +40,12 @@ jobs:
         pytest -m "not slow" --cov=src --cov-report=xml
         cat coverage.xml | grep 'package name="."'
 
+    - name: Upload coverage
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage
+        path: coverage.xml
+
   slow-tests:
     runs-on: ubuntu-latest
     name: Slow Tests and Parallel Tests
@@ -57,11 +63,23 @@ jobs:
         && sudo apt-get -y install python3 \
         && pip3 install pytest pytest-cov
 
-    - name: Running serial slow tests
+    - name: Running serial slow tests before downloading coverage
       run: |
         pytest -m "slow" --cov=src --cov-report=xml
+        cat cat coverage.xml | grep "package name="
+
+
+    - name: Download coverage
+      uses: actions/download-artifact@v4
+      with:
+        name: coverage
+  
+    - name: Running serial slow tests after downloading coverage with cov-append enabled
+      run: |
+        pytest -m "slow" --cov=src --cov-report=xml --cov-append 
+        cat cat coverage.xml | grep "package name="
 
     - name: Uploading coverage to Codecov
       run: |
         echo "Upload"
-        cat cat coverage.xml | grep 'package name="."'
+        cat cat coverage.xml | grep "package name="

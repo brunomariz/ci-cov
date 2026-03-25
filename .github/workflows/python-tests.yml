@@ -52,7 +52,6 @@ jobs:
 
   slow-tests:
     name: Slow Tests and Parallel Tests
-    runs-on: self-hosted
     needs: fast-tests
     if: github.event_name == 'pull_request'
     # Only runs on PRs after fast tests pass - saves resources

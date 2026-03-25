@@ -20,18 +20,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
-
   fast-tests:
-    name: Fast Tests
     runs-on: ubuntu-latest
+    name: Fast Tests
     # Runs on all pushes and pull requests for quick feedback
 
     steps:
-
-    - name: Pre-run cleanup
-        # Make sure the current directory is empty
-      run: find . -delete
 
     - uses: actions/checkout@v4
 
@@ -43,43 +37,55 @@ jobs:
 
     - name: Running serial fast tests
       run: |
-        pytest -m "not slow" --cov=src --cov-report=xml
-        cat coverage.xml | grep 'package name="."'
+        pytest -m "not slow" --cov=src
+        mv .coverage coverage.data
 
-    - name: Post-run cleanup
-      if: always()
-      run: find . -delete
+    - name: Debug coverage file
+      run: |
+        ls -la
+        pwd
+
+    - name: Upload coverage data
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage
+        path: coverage.data
 
   slow-tests:
+    runs-on: ubuntu-latest
     name: Slow Tests and Parallel Tests
-    runs-on: self-hosted
     needs: fast-tests
     if: github.event_name == 'pull_request'
     # Only runs on PRs after fast tests pass - saves resources
 
     steps:
 
-    - name: Pre-run cleanup
-        # Make sure the current directory is empty
-      run: find . -delete
-
     - uses: actions/checkout@v4
 
     - name: Install dependencies
       run: |
-        apt-get update \
-        && apt-get -y install git python3 \
+        sudo apt-get update \
+        && sudo apt-get -y install python3 \
         && pip3 install pytest pytest-cov
- 
-    - name: Running serial slow tests
+
+    - name: Running serial slow tests before downloading coverage
       run: |
         pytest -m "slow" --cov=src --cov-report=xml
+        cat coverage.xml | grep "package name="
+
+
+    - name: Download coverage data
+      uses: actions/download-artifact@v4
+      with:
+        name: coverage
+  
+    - name: Running serial slow tests after downloading coverage with cov-append enabled
+      run: |
+        mv coverage.data .coverage
+        pytest -m "slow" --cov=src --cov-report=xml --cov-append 
+        cat coverage.xml | grep "package name="
 
     - name: Uploading coverage to Codecov
       run: |
         echo "Upload"
-        cat cat coverage.xml | grep 'package name="."'
-
-    - name: Post-run cleanup
-      if: always()
-      run: find . -delete
+        cat coverage.xml | grep "package name="

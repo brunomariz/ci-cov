@@ -40,11 +40,11 @@ jobs:
         pytest -m "not slow" --cov=src --cov-report=xml
         cat coverage.xml | grep 'package name="."'
 
-    - name: Upload coverage
+    - name: Upload coverage data
       uses: actions/upload-artifact@v4
       with:
         name: coverage
-        path: coverage.xml
+        path: .coverage
 
   slow-tests:
     runs-on: ubuntu-latest
@@ -69,7 +69,7 @@ jobs:
         cat coverage.xml | grep "package name="
 
 
-    - name: Download coverage
+    - name: Download coverage data
       uses: actions/download-artifact@v4
       with:
         name: coverage

@@ -38,16 +38,18 @@ jobs:
     - name: Running serial fast tests
       run: |
         pytest -m "not slow" --cov=src
-        # cat coverage.xml | grep 'package name="."'
+        mv .coverage coverage.data
 
     - name: Debug coverage file
-      run: ls -la
+      run: |
+        ls -la
+        pwd
 
     - name: Upload coverage data
       uses: actions/upload-artifact@v4
       with:
         name: coverage
-        path: ${{ github.workspace }}/.coverage
+        path: coverage.data
 
   slow-tests:
     runs-on: ubuntu-latest
@@ -79,6 +81,7 @@ jobs:
   
     - name: Running serial slow tests after downloading coverage with cov-append enabled
       run: |
+        mv coverage-data .coverage
         pytest -m "slow" --cov=src --cov-report=xml --cov-append 
         cat coverage.xml | grep "package name="
 

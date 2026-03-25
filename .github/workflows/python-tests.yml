@@ -81,7 +81,7 @@ jobs:
   
     - name: Running serial slow tests after downloading coverage with cov-append enabled
       run: |
-        mv coverage-data .coverage
+        mv coverage.data .coverage
         pytest -m "slow" --cov=src --cov-report=xml --cov-append 
         cat coverage.xml | grep "package name="
 

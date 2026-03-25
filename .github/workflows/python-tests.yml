@@ -27,10 +27,6 @@ jobs:
 
     steps:
 
-    - name: Pre-run cleanup
-        # Make sure the current directory is empty
-      run: find . -delete
-
     - uses: actions/checkout@v4
 
     - name: Install dependencies
@@ -44,10 +40,6 @@ jobs:
         pytest -m "not slow" --cov=src --cov-report=xml
         cat coverage.xml | grep 'package name="."'
 
-    - name: Post-run cleanup
-      if: always()
-      run: find . -delete
-
   slow-tests:
     runs-on: ubuntu-latest
     name: Slow Tests and Parallel Tests
@@ -56,10 +48,6 @@ jobs:
     # Only runs on PRs after fast tests pass - saves resources
 
     steps:
-
-    - name: Pre-run cleanup
-        # Make sure the current directory is empty
-      run: find . -delete
 
     - uses: actions/checkout@v4
 
@@ -77,7 +65,3 @@ jobs:
       run: |
         echo "Upload"
         cat cat coverage.xml | grep 'package name="."'
-
-    - name: Post-run cleanup
-      if: always()
-      run: find . -delete

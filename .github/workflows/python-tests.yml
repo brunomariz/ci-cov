@@ -68,7 +68,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update \
-        && sudo apt-get -y install git python3 \
+        && sudo apt-get -y install python3 \
         && pip3 install pytest pytest-cov
 
     - name: Running serial slow tests

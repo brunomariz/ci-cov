@@ -15,11 +15,7 @@ concurrency:
 jobs:
   build:
 
-    # runs-on: self-hosted
-
-    container:
-      image: ubuntu:jammy
-      options: --user root  # Ensures it can install packages if needed
+    runs-on: ubuntu-latest
 
     steps:
 

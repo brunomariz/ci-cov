@@ -1,2 +1,4 @@
 coverage.xml
 .coverage
+*.pyc
+__pycache__/

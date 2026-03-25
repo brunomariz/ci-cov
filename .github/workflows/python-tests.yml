@@ -66,7 +66,7 @@ jobs:
     - name: Running serial slow tests before downloading coverage
       run: |
         pytest -m "slow" --cov=src --cov-report=xml
-        cat cat coverage.xml | grep "package name="
+        cat coverage.xml | grep "package name="
 
 
     - name: Download coverage
@@ -77,9 +77,9 @@ jobs:
     - name: Running serial slow tests after downloading coverage with cov-append enabled
       run: |
         pytest -m "slow" --cov=src --cov-report=xml --cov-append 
-        cat cat coverage.xml | grep "package name="
+        cat coverage.xml | grep "package name="
 
     - name: Uploading coverage to Codecov
       run: |
         echo "Upload"
-        cat cat coverage.xml | grep "package name="
+        cat coverage.xml | grep "package name="

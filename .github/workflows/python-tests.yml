@@ -47,7 +47,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: coverage
-        path: ".coverage"
+        path: ${{ github.workspace }}/.coverage
 
   slow-tests:
     runs-on: ubuntu-latest

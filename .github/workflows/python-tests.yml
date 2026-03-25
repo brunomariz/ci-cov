@@ -70,7 +70,7 @@ jobs:
         apt-get update \
         && apt-get -y install git python3 \
         && pip3 install pytest pytest-cov
- 
+
     - name: Running serial slow tests
       run: |
         pytest -m "slow" --cov=src --cov-report=xml

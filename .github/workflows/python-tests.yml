@@ -44,7 +44,7 @@ jobs:
     - name: Running serial fast tests
       run: |
         pytest -m "not slow" --cov=src --cov-report=xml
-        cat coverage.xml
+        cat coverage.xml | grep 'package name="."'
 
     - name: Post-run cleanup
       if: always()
@@ -78,7 +78,7 @@ jobs:
     - name: Uploading coverage to Codecov
       run: |
         echo "Upload"
-        cat coverage.xml
+        cat cat coverage.xml | grep 'package name="."'
 
     - name: Post-run cleanup
       if: always()

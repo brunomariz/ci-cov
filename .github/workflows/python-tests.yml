@@ -8,6 +8,10 @@ on: [push, pull_request]
 permissions:
   contents: read
 
+
+env:
+  PYTHONPATH: .
+
 concurrency:
   # Cancel running jobs if new commits are pushed
   group: >
@@ -16,8 +20,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  env:
-    PYTHONPATH: .
+
 
   fast-tests:
     name: Fast Tests

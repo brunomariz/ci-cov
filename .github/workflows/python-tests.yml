@@ -19,12 +19,11 @@ concurrency:
     ${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
-runs-on: ubuntu-latest
-
 jobs:
 
 
   fast-tests:
+    runs-on: ubuntu-latest
     name: Fast Tests
     # Runs on all pushes and pull requests for quick feedback
 
@@ -52,6 +51,7 @@ jobs:
       run: find . -delete
 
   slow-tests:
+    runs-on: ubuntu-latest
     name: Slow Tests and Parallel Tests
     needs: fast-tests
     if: github.event_name == 'pull_request'

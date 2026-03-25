@@ -37,8 +37,11 @@ jobs:
 
     - name: Running serial fast tests
       run: |
-        pytest -m "not slow" --cov=src --cov-report=xml
+        pytest -m "not slow" --cov=src
         cat coverage.xml | grep 'package name="."'
+
+    - name: Debug coverage file
+      run: ls -la
 
     - name: Upload coverage data
       uses: actions/upload-artifact@v4

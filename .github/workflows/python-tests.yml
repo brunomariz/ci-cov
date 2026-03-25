@@ -16,6 +16,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  env:
+    PYTHONPATH: .
+
   fast-tests:
     name: Fast Tests
     runs-on: ubuntu-latest

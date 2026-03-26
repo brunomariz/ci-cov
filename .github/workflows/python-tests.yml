@@ -85,7 +85,7 @@ jobs:
         pytest -m "slow" --cov=src --cov-report=xml --cov-append 
         cat coverage.xml | grep "package name="
 
-    - name: Uploading coverage to Codecov
-      run: |
-        echo "Upload"
-        cat coverage.xml | grep "package name="
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
